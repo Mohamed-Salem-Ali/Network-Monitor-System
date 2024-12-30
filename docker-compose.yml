@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  speedtest:
+    build:
+      context: .
+    container_name: speedtest_service
+    network_mode: host
+    privileged: true
+    environment:
+      - NETWORK_NAME=${NETWORK_NAME}
+      - NETWORK_PASSWORD=${NETWORK_PASSWORD}
+      - SPEEDTEST_INTERVAL=${SPEEDTEST_INTERVAL}
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    command: ["python", "speedtest.py"]
+
+  device-count:
+    build:
+      context: .
+    container_name: device_count_service
+    network_mode: host
+    privileged: true
+    environment:
+      - NETWORK_NAME=${NETWORK_NAME}
+      - NETWORK_PASSWORD=${NETWORK_PASSWORD}
+      - DEVICE_COUNT_INTERVAL=${DEVICE_COUNT_INTERVAL}
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    command: ["python", "device_count.py"]
