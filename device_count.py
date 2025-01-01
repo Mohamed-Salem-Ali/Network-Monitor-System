@@ -6,9 +6,10 @@ from common.logger import setup_logger
 from common.env_loader import load_env
 import scapy.all as scapy
 import socket
+import netifaces
 import csv
 import os
-def get_ip_range(logger):
+def get_ip_range_old(logger):
     """Automatically detect the IP range of the current network."""
     try:
         hostname = socket.gethostname()
@@ -21,6 +22,27 @@ def get_ip_range(logger):
         logger.error(f"Failed to detect IP range: {e}")
         return None
 
+def get_ip_range(logger):
+    """Automatically detect the IP range of the current network."""
+    try:
+        # Get the active interface's IP address
+        interfaces = netifaces.interfaces()
+        for interface in interfaces:
+            if netifaces.AF_INET in netifaces.ifaddresses(interface):
+                addr_info = netifaces.ifaddresses(interface)[netifaces.AF_INET][0]
+                local_ip = addr_info['addr']
+                if local_ip.startswith("127.") or local_ip.startswith("::1"):
+                    continue  # Skip loopback interface
+                subnet = local_ip.rsplit('.', 1)[0]  # Extract the first three octets
+                ip_range = f"{subnet}.0/24"
+                logger.info(f"Detected IP range: {ip_range}")
+                return ip_range
+
+        logger.error("No active network interface with a valid IP found.")
+        return None
+    except Exception as e:
+        logger.error(f"Failed to detect IP range: {e}")
+        return None
 
 def scan(ip_range,logger):
     """Perform an ARP scan on the given IP range."""
@@ -67,9 +89,10 @@ def save_scanned_devices(ssid, devices,logger):
             file.write(f"{timestamp},{num_devices},{ip_list},{mac_list}\n")
         
         logger.info(f"Scanned device summary saved to {device_file}")
+        print(f"Scanned device summary saved to {device_file}")
     except Exception as e:
         logger.error(f"Error saving scanned device summary: {e}")
-
+        print(f"Error saving scanned device summary: {e}")
 
 def scan_all_devices(env):
     ssid=env["network_name"]
