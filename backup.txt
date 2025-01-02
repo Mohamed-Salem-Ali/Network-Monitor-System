@@ -1,0 +1,20 @@
+# # Install necessary system dependencies
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#     wireless-tools \
+#     python3-dev \
+#     network-manager \
+#     iputils-ping \
+#     net-tools \
+#     iproute2 \
+#     dbus \
+#     curl \
+#     && apt-get clean \
+#     && rm -rf /var/lib/apt/lists/*
+
+# # Install Speedtest CLI (Python-based and Ookla version)
+# # - Install Python `speedtest-cli` via pip (from requirements.txt)
+# # - Install Ookla's CLI manually
+# RUN curl -Lo /tmp/speedtest.tgz https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-x86_64.tgz \
+#     && tar -xzf /tmp/speedtest.tgz -C /usr/local/bin \
+#     && chmod +x /usr/local/bin/speedtest \
+#     && rm /tmp/speedtest.tgz
