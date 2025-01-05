@@ -5,7 +5,7 @@ Common utility functions:
 import platform
 import subprocess
 import time
-from pywifi import PyWiFi, const, Profile
+#from pywifi import PyWiFi, const, Profile
 import time
 def currentOs():
     """Returns the current operating system."""
@@ -13,48 +13,48 @@ def currentOs():
     return platform.system().lower()
 
 
-def is_connected_network(network_name,logger):
-    try:
-        wifi = PyWiFi()
-        iface = wifi.interfaces()[0]  # Get the first Wi-Fi interface
-        iface.scan()  # Scan for networks
-        scan_results = iface.scan_results()  # Get scanned networks
+# def is_connected_network(network_name,logger):
+#     try:
+#         wifi = PyWiFi()
+#         iface = wifi.interfaces()[0]  # Get the first Wi-Fi interface
+#         iface.scan()  # Scan for networks
+#         scan_results = iface.scan_results()  # Get scanned networks
 
-        for network in scan_results:
-            if network.ssid == network_name and iface.status() == const.IFACE_CONNECTED:
-                return True
-    except Exception as e:
-        logger.error(f"Error checking network connection: {e}")
-        return False    # Logic to check network connectivity
+#         for network in scan_results:
+#             if network.ssid == network_name and iface.status() == const.IFACE_CONNECTED:
+#                 return True
+#     except Exception as e:
+#         logger.error(f"Error checking network connection: {e}")
+#         return False    # Logic to check network connectivity
     
-def connect_network(network_name, network_password,logger):
-    try:
-        wifi = PyWiFi()
-        iface = wifi.interfaces()[0]
-        iface.disconnect()
+# def connect_network(network_name, network_password,logger):
+#     try:
+#         wifi = PyWiFi()
+#         iface = wifi.interfaces()[0]
+#         iface.disconnect()
 
-        profile = Profile()
-        profile.ssid = network_name
-        profile.auth = const.AUTH_ALG_OPEN
-        profile.akm.append(const.AKM_TYPE_WPA2PSK)
-        profile.cipher = const.CIPHER_TYPE_CCMP
-        profile.key = network_password
+#         profile = Profile()
+#         profile.ssid = network_name
+#         profile.auth = const.AUTH_ALG_OPEN
+#         profile.akm.append(const.AKM_TYPE_WPA2PSK)
+#         profile.cipher = const.CIPHER_TYPE_CCMP
+#         profile.key = network_password
 
-        iface.remove_all_network_profiles()
-        iface.add_network_profile(profile)
-        iface.connect(profile)
+#         iface.remove_all_network_profiles()
+#         iface.add_network_profile(profile)
+#         iface.connect(profile)
 
-        # Wait for connection to establish
-        for _ in range(10):  # Retry for up to 10 seconds
-            if iface.status() == const.IFACE_CONNECTED:
-                logger.info(f"Successfully connected to Wi-Fi: {network_name}")
-                return True
-            time.sleep(1)
-    except Exception as e:
-        logger.warning(f"Attempt to connect to Wi-Fi failed: {e}")
-        time.sleep(5)  # Wait before retrying
-    logger.error(f"Failed to connect to Wi-Fi after 3 attempts.")
-    return False
+#         # Wait for connection to establish
+#         for _ in range(10):  # Retry for up to 10 seconds
+#             if iface.status() == const.IFACE_CONNECTED:
+#                 logger.info(f"Successfully connected to Wi-Fi: {network_name}")
+#                 return True
+#             time.sleep(1)
+#     except Exception as e:
+#         logger.warning(f"Attempt to connect to Wi-Fi failed: {e}")
+#         time.sleep(5)  # Wait before retrying
+#     logger.error(f"Failed to connect to Wi-Fi after 3 attempts.")
+#     return False
 
 
 

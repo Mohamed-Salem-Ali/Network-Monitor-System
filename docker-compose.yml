@@ -14,7 +14,6 @@ services:
     volumes:
       - ./logs:/app/logs
       - ./data:/app/data
-      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket # Mount DBus socket
     command: ["python3", "speedtest.py"]
 
   device-count:
@@ -30,5 +29,4 @@ services:
     volumes:
       - ./logs:/app/logs
       - ./data:/app/data
-      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket # Mount DBus socket
     command: ["python3", "device_count.py"]
