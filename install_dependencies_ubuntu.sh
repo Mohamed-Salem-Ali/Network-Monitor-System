@@ -4,6 +4,9 @@ set -e  # Exit immediately if a command exits with a non-zero status
 
 echo "Starting the installation of dependencies for native Ubuntu OS..."
 
+sudo apt --fix-broken install -y 
+
+
 # 1. Update and install system dependencies
 echo "Updating package lists and installing necessary system dependencies..."
 sudo apt-get update && sudo apt-get install -y --no-install-recommends \
@@ -22,11 +25,8 @@ sudo apt-get clean
 sudo rm -rf /var/lib/apt/lists/*
 
 # 2. Install Ookla's Speedtest CLI
-echo "Downloading and installing Ookla's Speedtest CLI..."
-curl -Lo /tmp/speedtest.tgz https://install.speedtest.net/app/cli/ookla-speedtest-1.2.0-linux-x86_64.tgz
-sudo tar -xzf /tmp/speedtest.tgz -C /usr/local/bin
-sudo chmod +x /usr/local/bin/speedtest
-rm /tmp/speedtest.tgz
+echo "installing speedtest-cli via snap.. "
+sudo snap install speedtest-cli -y
 
 # Verify installation
 if ! command -v speedtest &>/dev/null; then
